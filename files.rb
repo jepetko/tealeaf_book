@@ -22,4 +22,36 @@ end
 
 File.delete 'myFile.txt'
 
+# Exercise 1 (transform)
+file_a = File.new 'file_a.txt', 'w+'
+file_a.puts 'abc'
+file_a.close
+
+content = File.read('file_a.txt')
+
+File.open('file_b.txt', 'a+') do |f|
+  puts content
+  f.puts content
+end
+puts File.open('file_b.txt', 'r').read
+
+# Extensions
+puts File.extname 'file_b.txt'
+require 'pathname' # require it
+puts Pathname.new(File.new 'age.rb').extname
+
+# Exercise 2
+dir = Dir.new '.'
+while f = dir.read do
+  puts f +  ' ' + Pathname.new(f).extname
+end
+
+dir = Pathname.new '.'
+dir.entries.each do |f|
+  puts f
+end
+
+
+
+
 
