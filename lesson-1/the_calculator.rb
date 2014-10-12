@@ -25,27 +25,27 @@ class Calculator
   def grab_number
     number = gets.chomp
     return number.to_f if number.is_numeric?
-    self.say "Your input is invalid: #{number}. Please, give me a valid number."
+    say "Your input is invalid: #{number}. Please, give me a valid number."
     grab_number
   end
 
   def grab_operation
     op = gets.chomp.to_sym
     return op if [:+, :-, :*, :/].include? op
-    self.say "Operation unknown: #{op}. Please, give me a valid operation: +, -, * or /."
+    say "Operation unknown: #{op}. Please, give me a valid operation: +, -, * or /."
     grab_operation
   end
 
   def start
-    self.say 'Welcome to Calculator 0.0.1'
-    self.say 'First number:'
+    say 'Welcome to Calculator 0.0.1'
+    say 'First number:'
     first = grab_number
-    self.say 'Second number:'
+    say 'Second number:'
     second = grab_number
-    self.say 'Provide the operation you want to perform:'
+    say 'Provide the operation you want to perform:'
     op = grab_operation
     result = self.calculate op, [first, second]
-    self.say "Well done! The result is: #{result}."
+    say "Well done! The result is: #{result}."
   end
 
 end
