@@ -51,6 +51,7 @@ class PaperRockScissors
   def self.start
     say 'Play Paper, Rock, Scissors !!!'
     loop do
+      say '******************************************'
       say "choose one (#{GameLogic::TYPES.join '/'})"
       human_choice = pick
       pc_choice = GameLogic::TYPES[Random.new.rand(0..2)]
