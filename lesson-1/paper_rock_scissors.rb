@@ -23,10 +23,6 @@ class PaperRockScissors
   end
   extend GameLogic
 
-  private
-  def initialize
-  end
-
   def self.say(str)
     puts str
   end
@@ -40,13 +36,18 @@ class PaperRockScissors
     type.upcase == 'Y'
   end
 
-  public
   def self.pick
     loop do
       choice = gets.chomp.upcase
       return choice if valid?(choice)
     end
   end
+
+  private_class_method :say
+  private_class_method :valid?
+  private_class_method :continue?
+  private_class_method :pick
+  private_class_method :score
 
   def self.start
     say 'Play Paper, Rock, Scissors !!!'
