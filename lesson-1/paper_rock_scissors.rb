@@ -7,18 +7,21 @@ class PaperRockScissors
     def score(human_choice, pc_choice, &message_block)
       human_choice = human_choice.to_sym if not human_choice.is_a? Symbol
       pc_choice = pc_choice.to_sym if not pc_choice.is_a? Symbol
-      return 0 if human_choice == pc_choice
-
-      msg = COMBINATIONS[ [human_choice, pc_choice] ]
-      success = !msg.nil?
-      if !success
-        msg = COMBINATIONS[ [pc_choice, human_choice] ]
+      msg = ''
+      if human_choice == pc_choice
+        score = 0
+      else
+        msg = COMBINATIONS[ [human_choice, pc_choice] ]
+        score = !msg.nil? ? 1 : 2
+        if score == 2
+          msg = COMBINATIONS[ [pc_choice, human_choice] ]
+        end
       end
-      message_block.call msg
-      success
+      message_block.call score, msg
+      score
     end
   end
-  include GameLogic
+  extend GameLogic
 
   private
   def initialize
@@ -30,7 +33,11 @@ class PaperRockScissors
 
   def self.valid?(type)
     return false if type.nil?
-    TYPES.include? type.to_sym
+    GameLogic::TYPES.include? type.to_sym
+  end
+
+  def self.continue?(type)
+    type.upcase == 'Y'
   end
 
   public
@@ -43,8 +50,26 @@ class PaperRockScissors
 
   def self.start
     say 'Play Paper, Rock, Scissors !!!'
-    say "choose one (#{TYPES.split.join '/'})"
-    choice = pick
-    puts choice
+    loop do
+      say "choose one (#{GameLogic::TYPES.join '/'})"
+      human_choice = pick
+      pc_choice = GameLogic::TYPES[Random.new.rand(0..2)]
+      score human_choice, pc_choice do |score, msg|
+        say "You picked #{human_choice} and computer picked #{pc_choice}."
+        say msg
+        case score
+          when 0
+            say 'It\'s a tie'
+          when 1
+            say 'You won!'
+          when 2
+            say 'You lost... sorry.'
+        end
+      end
+      say 'Repeat the game? Y/N'
+      break if not continue?(gets.chomp)
+    end
   end
 end
+
+PaperRockScissors.start
