@@ -4,6 +4,11 @@ class PaperRockScissors
     TYPES = [:P, :R, :S]
     COMBINATIONS = { [:P, :R] => 'Paper wraps Rock', [:S, :P] => 'Scissors destroys Paper', [:R, :S] => 'Rocks damages Scissors' }
 
+    def valid?(type)
+      return false if type.nil?
+      TYPES.include? type.to_sym
+    end
+
     def score(human_choice, pc_choice, &message_block)
       human_choice = human_choice.to_sym if not human_choice.is_a? Symbol
       pc_choice = pc_choice.to_sym if not pc_choice.is_a? Symbol
@@ -25,11 +30,6 @@ class PaperRockScissors
 
   def self.say(str)
     puts str
-  end
-
-  def self.valid?(type)
-    return false if type.nil?
-    GameLogic::TYPES.include? type.to_sym
   end
 
   def self.continue?(type)
