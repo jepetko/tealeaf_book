@@ -2,16 +2,16 @@ class TicTacToe
 
   module Logic
     WINNING_COMBINATIONS = [
-        {0 => 0, 0 => 1, 0 => 2},
-        {1 => 0, 1 => 1, 1 => 2},
-        {2 => 0, 2 => 1, 2 => 2},
+        [{0 => 0}, {0 => 1}, {0 => 2}],
+        [{1 => 0}, {1 => 1}, {1 => 2}],
+        [{2 => 0}, {2 => 1}, {2 => 2}],
 
-        {0 => 0, 1 => 0, 2 => 0},
-        {0 => 1, 1 => 1, 2 => 1},
-        {0 => 2, 1 => 2, 2 => 2},
+        [{0 => 0}, {1 => 0}, {2 => 0}],
+        [{0 => 1}, {1 => 1}, {2 => 1}],
+        [{0 => 2}, {1 => 2}, {2 => 2}],
 
-        {0 => 0, 1 => 1, 2 => 2},
-        {0 => 2, 1 => 1, 2 => 0}
+        [{0 => 0}, {1 => 1}, {2 => 2}],
+        [{0 => 2}, {1 => 1}, {2 => 0}]
     ]
 
     def done?
@@ -33,8 +33,10 @@ class TicTacToe
     def won?
       WINNING_COMBINATIONS.each do |c|
         row = []
-        c.each do |x,y|
-          row << @raster[x][y]
+        c.each do |line|
+          line.each do |x,y|
+            row << @raster[x][y]
+          end
         end
         return true if full_match? row
       end
@@ -50,7 +52,7 @@ class TicTacToe
 
     def print_row(row)
       row.each do |cell|
-        print "|  #{cell}  "
+        print "|  #{cell.empty? ? ' ' : cell}  "
       end
       print "|\n"
     end
@@ -60,6 +62,7 @@ class TicTacToe
         print_border
         print_row row
       end
+      print_border
     end
   end
 
@@ -92,6 +95,7 @@ class TicTacToe
     end
 
     def pick_by_pc
+      return if done?
       while true
         pos = Random.rand(0..9)
         valid = occupy_position pos, 'O'
@@ -117,6 +121,7 @@ class TicTacToe
   end
 
   def start
+    system 'clear'
     display
     loop do
       pick_position
@@ -124,10 +129,10 @@ class TicTacToe
       system 'clear'
       display
       if won?
-        print 'Congratulations! you won!'
+        puts 'Congratulations! you won!'
         break
       elsif done?
-        print 'Sorry. PC is more clever.'
+        puts 'Sorry. PC is more clever.'
         break
       end
     end
