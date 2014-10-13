@@ -17,7 +17,7 @@ class TicTacToe
     def done?
       @raster.each do |row|
         row.each do |cell|
-          if cell.nil?
+          if cell.empty?
             return false
           end
         end
@@ -64,17 +64,40 @@ class TicTacToe
   end
 
   module Interaction
+
+    def occupy_position(pos, type = 'X')
+      data = /^[0-9]$/.match(pos.to_s).to_a.first
+      valid = !data.nil?
+      if valid
+        data = data.to_i
+        row = (data-1)/3
+        cell = data - row*3 - 1
+        return false if !@raster[row][cell].empty?
+        @raster[row][cell] = type
+      end
+      valid
+    end
+
     def pick_position
       while true
+        puts 'Pick a position:'
         pos = gets.chomp
-        data = /^[0-9]+$/.match(pos).to_a.first
-        valid = !data.nil?
+        valid = occupy_position pos, 'X'
         if valid
-
+          break
         else
-          puts "Input #{pos} not valid. Retry."
+          puts "Your input on #{pos} is not valid. Retry."
         end
-        break if valid
+      end
+    end
+
+    def pick_by_pc
+      while true
+        pos = Random.rand(0..9)
+        valid = occupy_position pos, 'O'
+        if valid
+          break
+        end
       end
     end
   end
@@ -85,15 +108,30 @@ class TicTacToe
 
   def initialize
     @raster = []
-    @raster << [ 'x', 'o', 'x' ]
-    @raster << [ 'x', 'o', 'x' ]
-    @raster << [ 'x', 'o', 'x' ]
+    3.times do
+      @raster << []
+      (0..2).each do
+        @raster.last << ''
+      end
+    end
   end
 
-
-
-
-
+  def start
+    display
+    loop do
+      pick_position
+      pick_by_pc
+      system 'clear'
+      display
+      if won?
+        print 'Congratulations! you won!'
+        break
+      elsif done?
+        print 'Sorry. PC is more clever.'
+        break
+      end
+    end
+  end
 end
 
-TicTacToe.new.display
+TicTacToe.new.start
