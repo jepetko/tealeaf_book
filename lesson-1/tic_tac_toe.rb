@@ -25,12 +25,12 @@ class TicTacToe
       true
     end
 
-    def full_match?(row)
+    def full_match?(row,type='X')
       match = row.uniq
-      match.length == 1 && match.first == 'X'
+      match.length == 1 && match.first == type
     end
 
-    def won?
+    def won?(type='X')
       WINNING_COMBINATIONS.each do |c|
         row = []
         c.each do |line|
@@ -38,7 +38,7 @@ class TicTacToe
             row << @raster[x][y]
           end
         end
-        return true if full_match? row
+        return true if full_match? row, type
       end
       false
     end
@@ -131,8 +131,11 @@ class TicTacToe
       if won?
         puts 'Congratulations! you won!'
         break
+      elsif won? 'O'
+        puts 'Sorry. The computer won.'
+        break
       elsif done?
-        puts 'Sorry. PC is more clever.'
+        puts 'There is a tie...'
         break
       end
     end
